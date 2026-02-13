@@ -1,0 +1,213 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>14 February ❤️</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI",sans-serif;
+}
+
+body{
+  height:100vh;
+  background:radial-gradient(circle at center,#ff5fa2,#b30059,#120007);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  color:#fff;
+}
+
+/* 💘 FLOATING HEARTS BACKGROUND */
+.hearts{
+  position:fixed;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+}
+
+.heart{
+  position:absolute;
+  font-size:22px;
+  animation:heartFloat linear infinite;
+  opacity:.6;
+}
+
+@keyframes heartFloat{
+  0%{ transform:translateY(110vh) scale(.8); opacity:0;}
+  30%{opacity:.7;}
+  100%{ transform:translateY(-10vh) scale(1.2); opacity:0;}
+}
+
+/* 🎵 MUSIC BUTTON LEFT */
+.music-btn{
+  position:fixed;
+  left:20px;
+  bottom:25px;
+  padding:10px 18px;
+  border:none;
+  border-radius:30px;
+  background:rgba(255,255,255,.15);
+  backdrop-filter:blur(10px);
+  color:#fff;
+  cursor:pointer;
+  z-index:50;
+}
+
+/* ➡ MOVE BUTTON RIGHT */
+.move-btn{
+  position:fixed;
+  right:20px;
+  bottom:25px;
+  padding:10px 22px;
+  border:none;
+  border-radius:30px;
+  background:rgba(255,255,255,.15);
+  backdrop-filter:blur(10px);
+  color:#fff;
+  cursor:pointer;
+  z-index:50;
+}
+
+/* ❤️ BIG LOVE CARD */
+.valentine-box{
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(18px);
+  border-radius:30px;
+  padding:50px 60px;
+  width:90%;
+  max-width:700px;
+  text-align:center;
+  box-shadow:0 0 40px rgba(255,105,180,.5);
+  animation:float 6s ease-in-out infinite, pulse 3s infinite;
+}
+
+@keyframes pulse{
+  0%,100%{ box-shadow:0 0 30px rgba(255,105,180,.4);}
+  50%{ box-shadow:0 0 55px rgba(255,160,210,.9);}
+}
+
+.valentine-box h1{
+  font-size:48px;
+  margin-bottom:15px;
+  color:#ffd6e4;
+  animation:textGlow 3s infinite alternate;
+}
+
+.name{
+  font-size:22px;
+  margin-bottom:20px;
+  color:#ffe4ef;
+}
+
+.message{
+  font-size:18px;
+  line-height:1.7;
+  color:#ffe9f3;
+  animation:textGlow 4s infinite alternate, fadeUp 2s ease;
+}
+
+/* ✨ TEXT GLOW */
+@keyframes textGlow{
+  from{ text-shadow:0 0 6px rgba(255,160,200,.3);}
+  to{ text-shadow:0 0 20px rgba(255,200,230,.9);}
+}
+
+/* 🌸 FADE UP */
+@keyframes fadeUp{
+  from{ transform:translateY(20px); opacity:0;}
+  to{ transform:translateY(0); opacity:1;}
+}
+
+/* FLOAT */
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-12px)}
+}
+</style>
+</head>
+
+<body>
+
+<!-- 💘 FLOATING HEARTS -->
+<div class="hearts">
+  <div class="heart" style="left:10%;animation-duration:12s;">❤️</div>
+  <div class="heart" style="left:30%;animation-duration:15s;">💖</div>
+  <div class="heart" style="left:60%;animation-duration:13s;">💕</div>
+  <div class="heart" style="left:80%;animation-duration:17s;">❤️</div>
+</div>
+
+<!-- 🎵 MUSIC -->
+<audio id="bgMusic" loop autoplay>
+  <source src="{{ url_for('static', filename='mp3/hotma.mp3') }}" type="audio/mpeg">
+</audio>
+
+<button class="music-btn" onclick="toggleMusic()">⏸ Music</button>
+<form action="{{ url_for('pic') }}" method="get" class="btn-area">
+<button class="move-btn">➡ Move</button>
+</form>
+<!-- ❤️ VALENTINE CONTENT -->
+<div class="valentine-box">
+
+  <h1>Happy 14 February ❤️</h1>
+
+  <div class="name">
+    My Dear {{ session['name'] }} 💖
+  </div>
+
+  <div class="message">
+ফেব্রুয়ারি এলে মনে হয়  
+ভালোবাসা নতুন করে শুরু… 🌸  
+চকলেটের থেকেও মিষ্টি তুমি,  
+তোমাতেই মনটা ভরু। 🍫🥰  
+
+১৪ ফেব্রুয়ারি এ শুধু  
+একটাই কথা বলি প্রিয়…  
+সব দিন তোমার সাথে কাটুক,  
+এই আমার ছোট্ট ইচ্ছা দিয়ো। ❤️
+  </div>
+
+</div>
+
+<script>
+const music=document.getElementById("bgMusic");
+const musicBtn=document.querySelector(".music-btn");
+
+// Try autoplay on load
+music.play().then(()=>{
+  musicBtn.textContent="⏸ Music";
+}).catch(()=>{
+  musicBtn.textContent="▶ Music";
+});
+
+// Fallback: play on first user interaction
+function playOnce(){
+  if(music.paused){
+    music.play().then(()=>{
+      musicBtn.textContent="⏸ Music";
+    });
+  }
+  document.removeEventListener("click",playOnce);
+  document.removeEventListener("touchstart",playOnce);
+}
+document.addEventListener("click",playOnce);
+document.addEventListener("touchstart",playOnce);
+
+function toggleMusic(){
+  if(music.paused){
+    music.play();
+    musicBtn.textContent="⏸ Music";
+  }else{
+    music.pause();
+    musicBtn.textContent="▶ Music";
+  }
+}
+</script>
+
+</body>
+</html>

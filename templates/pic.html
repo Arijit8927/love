@@ -1,0 +1,184 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Special Pic 💖</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI",sans-serif;
+}
+
+body{
+  height:100vh;
+  background:radial-gradient(circle at center,#ff7eb3,#b30059,#120007);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+}
+
+/* 🎵 RIGHT MUSIC BUTTON */
+.music-btn{
+  position:fixed;
+  right:20px;
+  bottom:30px;
+  padding:10px 18px;
+  border:none;
+  border-radius:30px;
+  background:rgba(255,255,255,.15);
+  backdrop-filter:blur(10px);
+  color:#fff;
+  cursor:pointer;
+  z-index:50;
+  transition:.3s;
+}
+.music-btn.active{
+  box-shadow:0 0 15px #ff99cc,0 0 30px #ff4da6;
+}
+
+/* 💗 FLOAT HEARTS */
+.hearts{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+}
+
+.heart{
+  position:absolute;
+  animation:heartMove linear infinite;
+  opacity:.6;
+}
+
+@keyframes heartMove{
+  0%{ transform:translateY(110vh); opacity:0;}
+  30%{opacity:.7;}
+  100%{ transform:translateY(-10vh); opacity:0;}
+}
+
+/* 🔥 CARD */
+.card{
+  position:relative;
+  width:380px;
+  height:420px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  animation:float 6s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-18px)}
+}
+
+/* 🖼️ CENTER BIG PIC */
+.photo{
+  width:300px;
+  height:300px;
+  border-radius:40px;
+  overflow:hidden;
+  padding:6px;
+  background:linear-gradient(45deg,#ff4da6,#ff99cc,#ff4da6);
+  animation:neonBorder 3s linear infinite;
+}
+
+.photo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:34px;
+}
+
+@keyframes neonBorder{
+  0%{ box-shadow:0 0 12px #ff4da6,0 0 30px #ff4da6;}
+  50%{ box-shadow:0 0 45px #ff99cc,0 0 80px #ff4da6;}
+  100%{ box-shadow:0 0 12px #ff4da6,0 0 30px #ff4da6;}
+}
+
+/* 👋 EMOJI */
+.bye-emoji{
+  margin-top:18px;
+  font-size:34px;
+  animation:emojiGlow 2s infinite alternate;
+}
+
+@keyframes emojiGlow{
+  from{ transform:scale(1); filter:drop-shadow(0 0 6px pink);}
+  to{ transform:scale(1.2); filter:drop-shadow(0 0 18px #ff99cc);}
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🎵 AUDIO -->
+<audio id="bgMusic" loop autoplay preload="auto">
+  <!-- 👉 IMPORTANT: mp3 use koro -->
+  <source src="{{ url_for('static', filename='mp3/palataparini.mp3') }}" type="audio/mpeg">
+</audio>
+
+<!-- 🎵 MUSIC BUTTON -->
+<button id="musicBtn" class="music-btn" onclick="toggleMusic()">⏸ Music</button>
+
+<div class="hearts">
+  <div class="heart" style="left:15%;animation-duration:14s;">💗</div>
+  <div class="heart" style="left:50%;animation-duration:12s;">❤️</div>
+  <div class="heart" style="left:80%;animation-duration:16s;">💕</div>
+</div>
+
+<div class="card">
+  <div class="photo">
+    <img src="{{ url_for('static', filename='img/trisha2.jpg') }}">
+  </div>
+  <div class="bye-emoji">👋😊💖</div>
+</div>
+
+<script>
+const music=document.getElementById("bgMusic");
+const btn=document.getElementById("musicBtn");
+
+// Try autoplay on load
+music.play().then(()=>{
+  btn.textContent="⏸ Music";
+  btn.classList.add("active");
+}).catch(()=>{
+  btn.textContent="▶ Music";
+});
+
+// Fallback: play on first user interaction
+function playOnce(){
+  if(music.paused){
+    music.play().then(()=>{
+      btn.textContent="⏸ Music";
+      btn.classList.add("active");
+    });
+  }
+  document.removeEventListener("click",playOnce);
+  document.removeEventListener("touchstart",playOnce);
+}
+document.addEventListener("click",playOnce);
+document.addEventListener("touchstart",playOnce);
+
+function toggleMusic(){
+  music.muted=false;
+
+  if(music.paused){
+    music.play().catch(()=>{});
+    btn.textContent="⏸ Music";
+    btn.classList.add("active");
+  }else{
+    music.pause();
+    btn.textContent="▶ Music";
+    btn.classList.remove("active");
+  }
+}
+</script>
+
+</body>
+</html>

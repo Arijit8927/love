@@ -1,0 +1,268 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Rose Day 🌹</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI", system-ui, sans-serif;
+}
+
+body{
+  height:100vh;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at top, rgba(255,120,150,.35), transparent 60%),
+    linear-gradient(180deg,#2b0012,#120008,#000);
+  color:#ffd6e4;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  opacity:0;
+  animation:fadeIn 2s ease forwards;
+}
+@keyframes fadeIn{ to{opacity:1} }
+
+/* ===== CENTER CONTENT ===== */
+.center{
+  position:relative;
+  z-index:5;
+  text-align:center;
+  padding:20px;
+  animation:float 6s ease-in-out infinite;
+}
+.center h1{
+  font-size:48px;
+  margin-bottom:14px;
+  letter-spacing:1px;
+  text-shadow:0 0 22px rgba(255,60,120,.7);
+}
+.center p{
+  font-size:18px;
+  line-height:1.7;
+  opacity:.9;
+  max-width:420px;
+  margin:auto;
+}
+.icons{
+  margin-top:22px;
+  font-size:28px;
+  letter-spacing:6px;
+  animation:pulse 2s infinite;
+}
+
+/* ===== FLOATING WORDS ===== */
+.floating-love{
+  position:fixed;
+  font-size:14px;
+  color:#ffd6e4;
+  opacity:.75;
+  animation:loveFloat 8s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes loveFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-14px)}
+}
+
+/* ===== PETALS ===== */
+.petal{
+  position:fixed;
+  top:-40px;
+  width:18px;
+  height:28px;
+  border-radius:70% 70% 70% 70%;
+  opacity:.9;
+  animation:fall linear forwards;
+  pointer-events:none;
+}
+@keyframes fall{
+  to{
+    transform:
+      translateY(110vh)
+      translateX(var(--drift))
+      rotate(360deg);
+    opacity:0;
+  }
+}
+
+/* ===== MUSIC CASE ===== */
+.music-case{
+  position:fixed;
+  left:20px;
+  bottom:30px;
+  width:64px;
+  height:64px;
+  border-radius:18px;
+  background:rgba(255,255,255,.08);
+  backdrop-filter: blur(14px);
+  border:1px solid rgba(255,255,255,.25);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  cursor:pointer;
+  z-index:10;
+  transition:.4s ease;
+}
+.music-case:hover{
+  background:rgba(255,255,255,.18);
+  box-shadow:0 0 22px rgba(255,120,160,.45);
+}
+.music-icon{
+  font-size:26px;
+}
+
+/* ===== MOVE BUTTON ===== */
+.move-btn{
+  position:fixed;
+  right:20px;
+  bottom:30px;
+  padding:12px 22px;
+  border-radius:30px;
+  background:rgba(255,255,255,.08);
+  backdrop-filter: blur(14px);
+  border:1px solid rgba(255,255,255,.25);
+  color:#ffd6e4;
+  font-size:16px;
+  letter-spacing:1px;
+  cursor:pointer;
+  z-index:10;
+  transition:.4s ease;
+}
+.move-btn:hover{
+  background:rgba(255,255,255,.18);
+  box-shadow:0 0 22px rgba(255,120,160,.45);
+}
+.move-btn::after{
+  content:" →";
+  opacity:.7;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-10px)}
+}
+@keyframes pulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.15)}
+}
+</style>
+</head>
+
+<body>
+
+<div class="center">
+  <h1>Happy Rose Day 🌹</h1>
+  <p>
+ গোলাপ তোমায় নাই বা দিলাম 
+        আদর দেবো ভরে😘😘
+  সব লড়াই এর পরেও তোমায় 
+         রাখবো নিজের করে😁 
+  তোমায় নিয়েই শহর সাজাই
+         তোমায় দেখেই থামি
+   আমার কাছে তোমার হাসি
+         🌹গোলাপ থেকেও দামি🥰😁 💕
+  </p>
+  <div class="icons">❤️ 🌹 💫</div>
+</div>
+
+<!-- MUSIC BUTTON -->
+<div class="music-case" id="musicBtn">
+  <div class="music-icon" id="musicIcon">🎵</div>
+</div>
+
+<!-- ✅ ONLY MOVE BUTTON -->
+<form action="{{ url_for('love4') }}" method="get" class="next-form">
+<button class="move-btn">Move</button>
+</form>
+
+<audio id="bgMusic" loop autoplay>
+  <source src="{{ url_for('static', filename='mp3/roman.mp3') }}" type="audio/mp3">
+</audio>
+
+<script>
+const petalColors=[
+  "radial-gradient(circle at 30% 30%, #ff9dbb, #c9004f 70%)",
+  "radial-gradient(circle at 30% 30%, #ff5c5c, #8b0000 70%)",
+  "radial-gradient(circle at 30% 30%, #fff5f8, #d9c7cf 70%)"
+];
+
+let tiltX=0;
+
+function createPetal(){
+  const p=document.createElement("div");
+  p.className="petal";
+  p.style.left=Math.random()*100+"vw";
+  p.style.animationDuration=6+Math.random()*6+"s";
+  p.style.setProperty("--drift",(Math.random()*120-60+tiltX)+"px");
+  p.style.background=petalColors[Math.floor(Math.random()*petalColors.length)];
+  document.body.appendChild(p);
+  setTimeout(()=>p.remove(),12000);
+}
+setInterval(createPetal,220);
+
+const words=["love","forever","always","with you","my heart","endless"];
+setInterval(()=>{
+  const w=document.createElement("div");
+  w.className="floating-love";
+  w.innerText=words[Math.floor(Math.random()*words.length)]+" ❤️";
+  w.style.left=Math.random()*90+"vw";
+  w.style.top=Math.random()*80+"vh";
+  document.body.appendChild(w);
+  setTimeout(()=>w.remove(),8000);
+},1200);
+
+window.addEventListener("deviceorientation",(e)=>{
+  if(e.gamma!==null){
+    tiltX=e.gamma/3;
+  }
+});
+
+/* MUSIC CONTROL */
+const music=document.getElementById("bgMusic");
+const btn=document.getElementById("musicBtn");
+const icon=document.getElementById("musicIcon");
+let playing=false;
+
+// Try autoplay on load
+music.play().then(()=>{
+  icon.textContent="⏸";
+  playing=true;
+}).catch(()=>{
+  icon.textContent="🎵";
+});
+
+// Fallback: play on first user interaction
+function playOnce(){
+  if(music.paused){
+    music.play().then(()=>{
+      icon.textContent="⏸";
+      playing=true;
+    });
+  }
+  document.removeEventListener("click",playOnce);
+  document.removeEventListener("touchstart",playOnce);
+}
+document.addEventListener("click",playOnce);
+document.addEventListener("touchstart",playOnce);
+
+btn.onclick=()=>{
+  if(!playing){
+    music.play();
+    icon.textContent="⏸";
+  }else{
+    music.pause();
+    icon.textContent="🎵";
+  }
+  playing=!playing;
+};
+</script>
+
+</body>
+</html>

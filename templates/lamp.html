@@ -1,0 +1,211 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Love Lamp – Flask Redirect</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,sans-serif}
+
+/* ===== BACKGROUND ===== */
+body{
+  height:100vh;
+  background:#0b0a09;
+  display:flex;
+  justify-content:center;
+  align-items:flex-end;
+  overflow:hidden;
+}
+
+/* ===== FLOOR ===== */
+.floor{
+  position:absolute;
+  bottom:0;
+  width:100%;
+  height:35%;
+  background:radial-gradient(ellipse at center,rgba(0,0,0,.6),transparent 70%);
+}
+
+/* ===== LAMP ===== */
+.lamp{
+  position:relative;
+  width:300px;
+  height:520px;
+  margin-bottom:40px;
+}
+
+/* LOVE LIGHT */
+.light{
+  position:absolute;
+  top:90px;
+  left:50%;
+  transform:translateX(-50%);
+  width:560px;
+  height:460px;
+  background:radial-gradient(
+    ellipse at center,
+    rgba(255,120,170,.95) 0%,
+    rgba(255,90,150,.65) 30%,
+    rgba(255,60,120,.35) 55%,
+    rgba(200,40,90,.18) 70%,
+    transparent 85%
+  );
+  filter:blur(18px);
+  pointer-events:none;
+}
+
+/* ===== SHADE ===== */
+.shade{
+  position:absolute;
+  top:90px;
+  left:50%;
+  transform:translateX(-50%);
+  width:220px;
+  height:135px;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #6f8f7c 0px,
+      #6f8f7c 4px,
+      #5e7f6b 8px
+    );
+  clip-path:polygon(18% 0%,82% 0%,100% 100%,0% 100%);
+  box-shadow:
+    inset 0 -24px 35px rgba(0,0,0,.4),
+    0 20px 40px rgba(0,0,0,.5);
+  z-index:7;
+}
+
+.diffuser{
+  position:absolute;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:130px;
+  height:32px;
+  background:rgba(255,255,255,.15);
+  filter:blur(8px);
+  
+  overflow:hidden;  
+}
+
+/* 🔥 ROPE MASK — UPPER WHITE ROPE HIDE */
+
+
+/* ===== PULL SYSTEM ===== */
+.pull-wrap{
+  position:absolute;
+  top:175px;
+  left:50%;
+  transform:translateX(10px);
+  width:20px;
+  height:120px;
+  overflow:hidden;
+  z-index:5;
+  cursor:pointer;
+}
+.pull-line{
+  position:absolute;
+  top:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:2px;
+  height:95px;
+  background:linear-gradient(#ddd,#999);
+}
+.pull-knob{
+  position:absolute;
+  top:95px;
+  left:50%;
+  transform:translateX(-50%);
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  background:radial-gradient(circle,#eee,#aaa);
+  box-shadow:0 4px 8px rgba(0,0,0,.4);
+}
+
+/* pull animation */
+.pull-anim .pull-line{animation:linePull .25s}
+.pull-anim .pull-knob{animation:knobPull .25s}
+@keyframes linePull{
+  0%{height:95px}
+  50%{height:120px}
+  100%{height:95px}
+}
+@keyframes knobPull{
+  0%{top:95px}
+  50%{top:120px}
+  100%{top:95px}
+}
+
+/* tripod */
+.leg{
+  position:absolute;
+  top:245px;
+  width:26px;
+  height:260px;
+  background:linear-gradient(#7a4e2b,#3f2613);
+  border-radius:14px;
+}
+.leg.left{left:85px;transform:rotate(18deg)}
+.leg.center{left:137px}
+.leg.right{right:85px;transform:rotate(-18deg)}
+
+.joint{
+  position:absolute;
+  top:235px;
+  left:50%;
+  transform:translateX(-50%);
+  width:46px;
+  height:18px;
+  background:linear-gradient(#999,#666);
+  border-radius:8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="floor"></div>
+
+<div class="lamp">
+  <div class="light"></div>
+
+  <div class="shade">
+    <div class="diffuser"></div>
+  </div>
+
+  <!-- 🔥 NEW MASK (UPPER ROPE HIDDEN) -->
+  <div class="rope-mask"></div>
+
+  <!-- FLASK FORM -->
+  <form action="{{ url_for('love2') }}" method="get" id="redirectForm">
+    <div class="pull-wrap" id="pull">
+      <div class="pull-line"></div>
+      <div class="pull-knob"></div>
+    </div>
+  </form>
+
+  <div class="joint"></div>
+  <div class="leg left"></div>
+  <div class="leg center"></div>
+  <div class="leg right"></div>
+</div>
+
+<script>
+const pull = document.getElementById("pull");
+const form = document.getElementById("redirectForm");
+
+pull.onclick = () => {
+  pull.classList.add("pull-anim");
+
+  setTimeout(() => {
+    form.submit();
+  }, 400);
+};
+</script>
+
+</body>
+</html>
