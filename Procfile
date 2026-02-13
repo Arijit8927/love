@@ -1,1 +1,2 @@
-web: gunicorn love:love
+web: gunicorn app:app
+
